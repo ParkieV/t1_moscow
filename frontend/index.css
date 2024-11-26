@@ -1,0 +1,58 @@
+.dot-grid {
+    background-image: radial-gradient(circle, rgba(128, 128, 128, 0.51) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+:root[data-mantine-color-scheme='light'] {
+    --mantine-color-body: var(--mantine-color-gray-1);
+}
+
+.close {
+    opacity: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.show {
+    opacity: 1;
+    animation: ease-in-out 0.2s fadeIn;
+
+}
+
+.clear-link-styles a {
+    text-decoration: none; /* Убирает подчеркивание */
+    color: inherit; /* Устанавливает цвет как у родительского элемента */
+    background: none; /* Убирает фон */
+}
+
+/* Стиль для всего скролбара */
+::-webkit-scrollbar {
+    width: 8px; /* Ширина вертикального скролбара */
+    height: 8px; /* Высота горизонтального скролбара */
+}
+
+/* Стиль для ползунка скролбара */
+::-webkit-scrollbar-thumb {
+    background-color: #5c5c5c; /* Цвет ползунка */
+    border-radius: 4px; /* Радиус скругления углов ползунка */
+}
+
+/* Стиль при наведении на ползунок */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Цвет ползунка при наведении */
+}
+
+/* Стиль для скролбара (фона) */
+::-webkit-scrollbar-track {
+    background-color: var(--mantine-color-body); /* Цвет фона */
+    border-radius: 0; /* Радиус скругления углов фона */
+}
