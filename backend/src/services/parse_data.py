@@ -44,11 +44,10 @@ async def _parse_txt(file: UploadFile) -> list[dict[str, Any]]:
 
     file_info = {
         'metadata': {
-            "page_number": 1,  # номер страницы
-            "page_char_counts": len(text),  # количество символов
-            "page_word_counts": len(text.split(" ")),  # количество слов
-            "page_sents_counts": len(text.split(". ")),  # количество предложений
-            "page_token_counts(approximately)": len(text) / 4,  # количество токенов
+            "char_counts": len(text),  # количество символов
+            "word_counts": len(text.split(" ")),  # количество слов
+            "sents_counts": len(text.split(". ")),  # количество предложений
+            "token_counts(approximately)": len(text) / 4,  # количество токенов
         },
         "text": text  # текст
     }
@@ -70,10 +69,10 @@ async def _parse_docx(file: UploadFile) -> list[dict[str, Any]]:
 
     file_info = {
         'metadata': {
-            "paragraph_char_counts": len(full_text),  # количество символов
-            "paragraph_word_counts": len(full_text.split(" ")),  # количество слов
-            "paragraph_sents_counts": len(full_text.split(". ")),  # количество предложений
-            "paragraph_token_counts(approximately)": len(full_text) / 4,  # количество токенов
+            "char_counts": len(full_text),  # количество символов
+            "word_counts": len(full_text.split(" ")),  # количество слов
+            "sents_counts": len(full_text.split(". ")),  # количество предложений
+            "token_counts(approximately)": len(full_text) / 4,  # количество токенов
         },
         "text": full_text  # текст
     }
