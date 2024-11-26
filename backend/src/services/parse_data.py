@@ -8,16 +8,18 @@ from fastapi import UploadFile
 
 
 async def parse_files(files: list[UploadFile]):
+    res = []
     for file in files:
-        match filename := file.filename:
-            case filename.endswith('.pdf'):
-                await _parse_pdf(file)
-            case filename.endswith('.docx'):
-                ...
-            case filename.endswith('.txt'):
-                ...
-            case _:
-                raise ValueError('Could not parse file')
+        if file.filename.endswith('.pdf'):
+            res.append(await _parse_pdf(file))
+        elif file.filename.endswith('.docx'):
+            res.append(await _parse_docx(file))
+        elif file.filename.endswith('.txt'):
+            res.append(await _parse_txt(file))
+        else:
+            raise ValueError('Could not parse file')
+
+    return res
 
 
 async def _parse_pdf(file: UploadFile) -> list[dict[str, Any]]:
