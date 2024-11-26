@@ -25,6 +25,8 @@ sqlalchemy = "^2.0.36"
 dependency-injector = "^4.43.0"
 asyncpg = "^0.30.0"
 psycopg2 = "^2.9.10"
+fitz = "^0.0.1.dev2"
+pymupdf = "^1.24.14"
 
 
 [build-system]
