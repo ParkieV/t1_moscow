@@ -1,6 +1,5 @@
-from typing import TypeVar
+from typing import TypeVar, Any
 
-from attrs import define
 from pydantic import BaseModel
 from sqlalchemy import select
 
@@ -10,12 +9,11 @@ from src.repositories.sqlalc_models import Base
 BaseDBModel = TypeVar('BaseDBModel', bound=Base)
 ModelDTO = TypeVar('ModelDTO', bound=BaseModel)
 
-@define
 class BasePostgresCRUD:
 
-    session_factory = None
+    session_factory: Any = None
 
-    model: str | None = None
+    model: BaseDBModel | str = None
 
     async def get_object(self,
                          model_id: int,
