@@ -4,6 +4,7 @@ from src.repositories.postgres import UserCRUD, PostgresContext
 from src.schemas.user import UserOutDTO
 from src.services.utils import check_token
 
+
 router = APIRouter(tags=["Authorization Endpoints"])
 
 

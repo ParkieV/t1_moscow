@@ -37,6 +37,7 @@ class AuthHandler:
     @classmethod
     async def authenticate_user(cls, username: str, password: str):
         cls.db_context.crud.session_factory = cls.db_context.new_session
+        logger.debug(f"aaa {cls.db_context.crud.model}, {cls.db_context.crud.session_factory}")
         user = await cls.db_context.crud.get_user_by_username(username, out_schema=UserOutDTO)
         logger.debug("Found user : %s", user)
         if not user or not cls.verify_password(password, user.hashed_password):

@@ -36,7 +36,7 @@ class PostgresContext[PostgresCRUD]:
 
     @classmethod
     @asynccontextmanager
-    async def new_session(cls) -> AsyncGenerator[AsyncSession, None]:
+    async def new_session(cls):
         """ Fabric to create new session with database """
         async with cls._sessionmaker() as session:
             yield session
