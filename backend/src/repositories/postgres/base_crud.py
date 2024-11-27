@@ -1,7 +1,9 @@
-from typing import TypeVar, Any
+from typing import TypeVar, Any, AsyncGenerator, AsyncContextManager
 
+from attrs import define
 from pydantic import BaseModel
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.logger import logger
 from src.repositories.sqlalc_models import Base
@@ -9,6 +11,7 @@ from src.repositories.sqlalc_models import Base
 BaseDBModel = TypeVar('BaseDBModel', bound=Base)
 ModelDTO = TypeVar('ModelDTO', bound=BaseModel)
 
+@define
 class BasePostgresCRUD:
 
     session_factory: Any = None

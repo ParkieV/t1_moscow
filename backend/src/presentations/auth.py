@@ -7,7 +7,7 @@ from src.jwt import AuthHandler
 router = APIRouter(prefix="/auth", tags=["Authorization endpoints"])
 
 
-@router.post("/token")
+@router.post("/login")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     auth_handler = AuthHandler()
     try:
