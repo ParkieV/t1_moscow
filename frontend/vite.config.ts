@@ -6,7 +6,7 @@ import Pages from "vite-plugin-pages";
 export default defineConfig({
   server: {
     proxy: {
-      '/api': 'http://127.0.0.1:3000',
+      '/api': 'http://localhost:80',
     }
   },
   plugins: [

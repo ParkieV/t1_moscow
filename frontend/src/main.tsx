@@ -10,16 +10,16 @@ const myTheme = createTheme({
   primaryColor: 'blue',
   colors: {
     blue: [
-      "#feecff",
-      "#f3d7fa",
-      "#e2adef",
-      "#d07fe4",
-      "#c259db",
-      "#b841d6",
-      "#b434d5",
-      "#9e26bd",
-      "#8d20a9",
-      "#7b1694"
+      "#e8f6ff",
+      "#d9e8f7",
+      "#b6cde5",
+      "#90b1d4",
+      "#7099c5",
+      "#5b8abc",
+      "#4f83b9",
+      "#3e71a4",
+      "#336494",
+      "#215785"
     ],
     text: colorsTuple(Array(10).fill('var(--mantine-color-text)'))
   },
@@ -31,7 +31,7 @@ const app = createRoot(document.getElementById('root')!)
 
 app.render(
     <BrowserRouter>
-      <MantineProvider theme={theme}>
+      <MantineProvider theme={theme} defaultColorScheme='light'>
         <App />
       </MantineProvider>
     </BrowserRouter>
