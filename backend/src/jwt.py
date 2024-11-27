@@ -11,12 +11,12 @@ from src.schemas.user import UserOutDTO
 
 
 class AuthHandler:
-    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
+    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
     _pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     _auth_config = auth_config
 
-    db_context: PostgresContext[UserCRUD] = PostgresContext[UserCRUD](crud=UserCRUD())
+    db_context: PostgresContext[UserCRUD] = PostgresContext[UserCRUD](crud=UserCRUD(PostgresContext.new_session))
 
     @classmethod
     def create_access_token(cls, data: dict, expires_delta: timedelta = None):
@@ -36,7 +36,6 @@ class AuthHandler:
 
     @classmethod
     async def authenticate_user(cls, username: str, password: str):
-        cls.db_context.crud.session_factory = cls.db_context.new_session
         logger.debug(f"aaa {cls.db_context.crud.model}, {cls.db_context.crud.session_factory}")
         user = await cls.db_context.crud.get_user_by_username(username, out_schema=UserOutDTO)
         logger.debug("Found user : %s", user)

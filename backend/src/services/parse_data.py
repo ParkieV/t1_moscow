@@ -6,16 +6,27 @@ from docx import Document
 
 from fastapi import UploadFile
 
+from src.logger import logger
+from src.repositories.postgres import PostgresContext
+from src.repositories.postgres.data import FileCRUD
+
 
 async def parse_files(files: list[UploadFile]):
+    db_context = PostgresContext[FileCRUD](crud=FileCRUD(session_factory=PostgresContext.new_session))
     res = []
     for file in files:
         if file.filename.endswith('.pdf'):
-            res.append(await _parse_pdf(file))
+            data_info = await _parse_pdf(file)
+            await db_context.crud.insert_file(data_info)
+            res.append(data_info)
         elif file.filename.endswith('.docx'):
-            res.append(await _parse_docx(file))
+            data_info = await _parse_docx(file)
+            await db_context.crud.insert_file(data_info)
+            res.append(data_info)
         elif file.filename.endswith('.txt'):
-            res.append(await _parse_txt(file))
+            data_info = await _parse_txt(file)
+            await db_context.crud.insert_file(data_info)
+            res.append(data_info)
         else:
             raise ValueError('Could not parse file')
 
@@ -30,6 +41,7 @@ async def _parse_pdf(file: UploadFile) -> list[dict[str, Any]]:
 
         file_info.append({
             'metadata': {
+                "page_number": number_of_page + 1,
                 "page_char_counts": len(text),  # количество символов
                 "page_word_counts": len(text.split(" ")),  # количество слов
                 "page_sents_counts": len(text.split(". ")),  # количество предложений
@@ -44,11 +56,10 @@ async def _parse_txt(file: UploadFile) -> list[dict[str, Any]]:
 
     file_info = {
         'metadata': {
-            "page_number": 1,  # номер страницы
-            "page_char_counts": len(text),  # количество символов
-            "page_word_counts": len(text.split(" ")),  # количество слов
-            "page_sents_counts": len(text.split(". ")),  # количество предложений
-            "page_token_counts(approximately)": len(text) / 4,  # количество токенов
+            "char_counts": len(text),  # количество символов
+            "word_counts": len(text.split(" ")),  # количество слов
+            "sents_counts": len(text.split(". ")),  # количество предложений
+            "token_counts(approximately)": len(text) / 4,  # количество токенов
         },
         "text": text  # текст
     }
@@ -70,10 +81,10 @@ async def _parse_docx(file: UploadFile) -> list[dict[str, Any]]:
 
     file_info = {
         'metadata': {
-            "paragraph_char_counts": len(full_text),  # количество символов
-            "paragraph_word_counts": len(full_text.split(" ")),  # количество слов
-            "paragraph_sents_counts": len(full_text.split(". ")),  # количество предложений
-            "paragraph_token_counts(approximately)": len(full_text) / 4,  # количество токенов
+            "char_counts": len(full_text),  # количество символов
+            "word_counts": len(full_text.split(" ")),  # количество слов
+            "sents_counts": len(full_text.split(". ")),  # количество предложений
+            "token_counts(approximately)": len(full_text) / 4,  # количество токенов
         },
         "text": full_text  # текст
     }

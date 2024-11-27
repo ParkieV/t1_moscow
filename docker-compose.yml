@@ -1,6 +1,6 @@
 services:
   database:
-    image: postgres:17.0
+    image: pgvector/pgvector:pg17
     restart: unless-stopped
     env_file: .env
     environment:
@@ -11,7 +11,8 @@ services:
       - ${DB_PORT}:5432
     volumes:
       - db_data:/data/db
-      - ./initial_db.sql:/docker-entrypoint-initdb.d/initial_db.sql
+      - ./01_initial_db.sql:/docker-entrypoint-initdb.d/01_initial_db.sql
+      - ./02_initial_funcs.sql:/docker-entrypoint-initdb.d/02_initial_funcs.sql
 
   frontend:
     restart: unless-stopped
@@ -33,17 +34,42 @@ services:
       dockerfile: Dockerfile
     env_file: .env
 #    ports:
-#      - "8000:8000"
+#      - ${BACKEND_PUBLIC_PORT}:${BACKEND_PORT}
     depends_on:
       database:
         condition: service_started
+
+  s3:
+    image: minio/minio:latest
+    platform: linux/arm64
+    restart: unless-stopped
+    command: server --console-address ":9001" http://minio1/data{1...2}
+    hostname: minio1
+    expose:
+      - "9000"
+      - "9001"
+    ports:
+      - "9090:9001"
+    env_file:
+      - .env
+    environment:
+       MINIO_ROOT_USER: ${S3_ROOT_USERNAME}
+       MINIO_ROOT_PASSWORD: ${S3_ROOT_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "mc", "ready", "local" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - s3_data-1:/data1
+      - s3_data-2:/data2
 
 #  ml:
 #    restart: unless-stopped
 #    env_file: .env
 #    build:
 #      context: ml
-#      dockerfile: Dockerfile
+#      dockerfile: postgres.db.Dockerfile
 #    depends_on:
 #      database:
 #        condition: service_started
@@ -54,3 +80,5 @@ volumes:
   db_data:
   caddy_data:
   caddy_config:
+  s3_data-1:
+  s3_data-2:

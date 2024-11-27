@@ -28,5 +28,14 @@ class DBConfig(BaseSettings):
 
     model_config = SettingsConfigDict(env_prefix='DB_', extra="allow")
 
+class S3Config(BaseSettings):
+    username: str
+    access_key: str
+    secret_key: str
+    uri: str
+
+    model_config = SettingsConfigDict(env_prefix='S3_', extra="allow")
+
 auth_config = AuthConfig()
 db_config = DBConfig()
+s3_config = S3Config()
