@@ -1,4 +1,4 @@
-import {Group, NavLink} from "@mantine/core";
+import {NavLink} from "@mantine/core";
 import {BrainIcon, DatabaseIcon, PlusIcon} from "lucide-react";
 import {Link} from "react-router-dom";
 

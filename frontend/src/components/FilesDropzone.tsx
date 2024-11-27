@@ -1,5 +1,5 @@
 import {FC, useRef} from 'react';
-import {Badge, Button, Code, Group, Stack, Text} from '@mantine/core';
+import {Button, Code, Group, Stack, Text} from '@mantine/core';
 import {Dropzone} from '@mantine/dropzone';
 import {FilesIcon} from "lucide-react";
 

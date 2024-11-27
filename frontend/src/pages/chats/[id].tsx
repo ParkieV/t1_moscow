@@ -1,9 +1,7 @@
 import {ActionIcon, Box, Card, Container, Group, Input, Stack} from "@mantine/core";
-import { useEffect, useState, useRef } from "react";
+import {useEffect, useRef, useState} from "react";
 import {SendIcon} from "lucide-react";
 import {useParams} from "react-router";
-import {Layout} from "../../Layout.tsx";
-import {Navbar} from "../../components/Navbar.tsx";
 
 const defaultMessages = [
   { role: 'user', text: 'Hello!' },

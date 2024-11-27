@@ -1,19 +1,6 @@
-import {
-  Anchor,
-  Button,
-  Checkbox,
-  Divider,
-  Group,
-  Paper,
-  PaperProps,
-  PasswordInput,
-  Stack,
-  Text,
-  TextInput,
-} from '@mantine/core';
+import {Button, Checkbox, Group, Paper, PaperProps, PasswordInput, Stack, Text, TextInput,} from '@mantine/core';
 import {useForm} from '@mantine/form';
 import {upperFirst, useToggle} from '@mantine/hooks';
-import {TwitterButton} from './Twitter';
 import {useCurrentUser} from "../zustand/user.ts";
 import {Navigate} from "react-router";
 
@@ -41,12 +28,12 @@ export function AuthenticationForm(props: PaperProps) {
         Welcome to Window of knowledge, {type} with
       </Text>
 
-      <Group grow mb="md" mt="md">
-        <TwitterButton radius="xl">Keycloak</TwitterButton>
-        <TwitterButton radius="xl">Other SSO</TwitterButton>
-      </Group>
+      {/*<Group grow mb="md" mt="md">*/}
+      {/*  <TwitterButton radius="xl">Keycloak</TwitterButton>*/}
+      {/*  <TwitterButton radius="xl">Other SSO</TwitterButton>*/}
+      {/*</Group>*/}
 
-      <Divider label="Or continue with email" labelPosition="center" my="lg" />
+      {/*<Divider label="Or continue with email" labelPosition="center" my="lg" />*/}
 
       <form onSubmit={form.onSubmit(({username, email}) => {
         setUser({username, email})
