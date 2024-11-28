@@ -26,7 +26,7 @@ export default function Chats() {
   useEffect(() => {
     setMessages([...defaultMessages.slice(0, -1), {role: 'bot', text: 'Я бот ' + name}]);
     setTheme({main_color, theme})
-  }, [id]);
+  }, []);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
