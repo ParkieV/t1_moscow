@@ -70,6 +70,7 @@ def load_embeddings(file_info: list[list[dict[str, Any]]]):
         text_and_embs = pd.DataFrame(good_chunks)
         logger.debug(text_and_embs)
         files.append(text_and_embs)
+    return files
 
 def get_answer():
 
