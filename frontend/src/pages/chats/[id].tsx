@@ -1,17 +1,15 @@
-import {ActionIcon, Box, Card, Container, Group, Input, Stack} from "@mantine/core";
+import {ActionIcon, Avatar, Box, Card, Container, Group, Input, Stack, Text} from "@mantine/core";
 import {useEffect, useRef, useState} from "react";
 import {SendIcon} from "lucide-react";
 import {useParams} from "react-router";
+import {assistants} from "../../assistants.ts";
+import {useTheme} from "../../main.tsx";
 
 const defaultMessages = [
-  { role: 'user', text: 'Hello!' },
-  { role: 'bot', text: 'Hi there!' },
-  { role: 'user', text: 'How are you?' },
-  { role: 'bot', text: 'I am good, thank you!' },
-  { role: 'user', text: 'That is great to hear!' },
-  { role: 'bot', text: 'Yes, it is!' },
-  { role: 'user', text: 'Goodbye!' },
-  { role: 'bot', text: 'Goodbye!' },
+  { role: 'user', text: 'Привет, как дела?' },
+  { role: 'bot', text: 'Привет, я бот, у меня все хорошо' },
+  { role: 'user', text: 'Кто ты?' },
+  { role: 'user', text: 'Кто ты?' },
 ];
 
 interface Message {
@@ -21,8 +19,14 @@ interface Message {
 
 export default function Chats() {
   const {id} = useParams()
+  const {name, description, main_color, theme} = assistants[+id!]
+  const {setTheme} = useTheme();
 
-  const [messages, setMessages] = useState<Message[]>([...defaultMessages, {role: 'bot', text: 'Hello this chat is for ' + id}]);
+  const [messages, setMessages] = useState<Message[]>([...defaultMessages, {role: 'bot', text: 'Я бот ' + name}]);
+  useEffect(() => {
+    setMessages([...defaultMessages.slice(0, -1), {role: 'bot', text: 'Я бот ' + name}]);
+    setTheme({main_color, theme})
+  }, [id]);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -57,6 +61,10 @@ export default function Chats() {
         <Container w='100%'>
           <Stack>
             <Box w='100%'/>
+            <Stack>
+              <Avatar size='xl' name={name} color='custom'/>
+              <Text size='xl'>{description}</Text>
+            </Stack>
             {messages.map((message, index) => (
               <Card key={index} style={{ alignSelf: message.role === 'user' ? 'flex-end' : 'flex-start' }}>
                 {message.text}

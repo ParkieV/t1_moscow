@@ -1,6 +1,7 @@
-import {NavLink} from "@mantine/core";
+import {Avatar, NavLink} from "@mantine/core";
 import {BrainIcon, DatabaseIcon, PlusIcon} from "lucide-react";
 import {Link} from "react-router-dom";
+import {assistants} from "../assistants.ts";
 
 interface MyLinkProps {
   to: string;
@@ -23,9 +24,11 @@ export const Navbar = () => {
       <MyLink to='/assistants' leftSection={<BrainIcon />} label="Все ассистенты"/>
       <MyLink to='/admin' leftSection={<DatabaseIcon />} label="Базы знаний"/>
       <hr color='gray' style={{ opacity: 0.4, width: '100%' }} />
-      <MyLink to='/chats/1' label="chat 1"/>
-      <MyLink to='/chats/2' label="chat 2"/>
-      <MyLink to='/chats/3' label="chat 3"/>
+      {assistants.map(({name}, id) => {
+        return (
+          <MyLink to={`/chats/${id}`} key={name} label={name} leftSection={<Avatar name={name}/> }/>
+        );
+      })}
     </div>
   );
 };
