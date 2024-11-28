@@ -7,7 +7,6 @@ from src.repositories.postgres import PostgresContext, UserCRUD
 from src.repositories.postgres.assistant import AssistantCRUD
 from src.schemas.assistants import AssistantCreateDTO, AssistantCreateBodyDTO
 from src.schemas.user import UserOutDTO
-from src.services.parse_data import parse_files
 from src.services.utils import check_token
 
 router = APIRouter(prefix="/assistants", tags=["assistants"])
