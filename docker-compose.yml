@@ -38,43 +38,21 @@ services:
     depends_on:
       database:
         condition: service_started
+      frontend:
+        condition: service_started
 
-  s3:
-    image: minio/minio:latest
-    platform: linux/arm64
+  ml:
     restart: unless-stopped
-    command: server --console-address ":9001" http://minio1/data{1...2}
-    hostname: minio1
-    expose:
-      - "9000"
-      - "9001"
-    ports:
-      - "9090:9001"
-    env_file:
-      - .env
-    environment:
-       MINIO_ROOT_USER: ${S3_ROOT_USERNAME}
-       MINIO_ROOT_PASSWORD: ${S3_ROOT_PASSWORD}
-    healthcheck:
-      test: [ "CMD", "mc", "ready", "local" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - s3_data-1:/data1
-      - s3_data-2:/data2
-
-#  ml:
-#    restart: unless-stopped
-#    env_file: .env
-#    build:
-#      context: ml
-#      dockerfile: postgres.db.Dockerfile
-#    depends_on:
-#      database:
-#        condition: service_started
-#      frontend:
-#        condition: service_started
+    env_file: .env
+    build:
+      context: ml
+      dockerfile: Dockerfile
+    depends_on:
+      database:
+        condition: service_started
+      backend:
+        condition: service_started
+      
 
 volumes:
   db_data:
