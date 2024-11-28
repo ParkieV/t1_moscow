@@ -55,7 +55,7 @@ export default function Chats() {
     if (!input) return
     setMessages(prevMessages => [...prevMessages, { role: 'user', text: input }]);
     setInput(''); // Clear input field
-    const resp = await handledFetch(`/ml_api/assistants/${assistants[+id!].id}/query`, {
+    const resp = await handledFetch(`/api_ml/assistants/${assistants[+id!].id}/query`, {
       body: input,
       method: 'POST'
     })

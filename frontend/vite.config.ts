@@ -7,6 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': 'http://localhost',
+      '/api_ml': 'http://localhost',
     }
   },
   plugins: [
