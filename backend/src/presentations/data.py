@@ -9,4 +9,4 @@ router = APIRouter(prefix="/data", tags=["endpoints to work with data"])
 async def upload_files(files: list[UploadFile] = File(...)):
     if len(files) < 1:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
-    return await parse_files(files)
+    await parse_files(files)

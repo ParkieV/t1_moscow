@@ -12,7 +12,7 @@ from src.repositories.postgres.data import FileCRUD
 
 
 async def parse_files(files: list[UploadFile]):
-    db_context = PostgresContext[FileCRUD](crud=FileCRUD(session_factory=PostgresContext.new_session))
+    db_context = PostgresContext(crud=FileCRUD(session_factory=PostgresContext.new_session))
     res = []
     for file in files:
         if file.filename.endswith('.pdf'):
