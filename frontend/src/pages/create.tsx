@@ -20,6 +20,7 @@ import {
 import {useRef, useState} from "react";
 import {FilesDropzone} from "../components/FilesDropzone.tsx";
 import {BrainIcon, MinusIcon, PlusIcon} from "lucide-react";
+import {handledFetch} from "../shared/api.ts";
 
 export default function Create() {
   const [urls, setUrls] = useState<string[]>(['']);
@@ -29,6 +30,32 @@ export default function Create() {
   const [color, setColor] = useState('#5f6dc7');
   const avatarInputRef = useRef<HTMLButtonElement | null>(null);
   const {colorScheme, setColorScheme} = useMantineColorScheme()
+
+  // {
+  //   "name": "string",
+  //   "icon": "string",
+  //   "main_color": "string",
+  //   "theme": "dark",
+  //   "website_url": "string"
+  // }
+
+  const submit = () => {
+    handledFetch('/api/assistants/create', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNzMyOTczMDQ1fQ.lLrQUDKhFM-sTeiCMe_-F9zEWQZ_QSfWFg_lAkOV4Xs'}`,
+        'Content-Type': 'application/json', // Ensure this header is set
+      },
+      body: JSON.stringify({
+        name: "asasdfaiisdfsadjfdf",
+        icon: "",
+        main_color: "#829030",
+        theme: "dark",
+        website_url: "string"
+      }),
+    });
+  }
+
 
   return (
     <MantineProvider theme={{
@@ -85,7 +112,7 @@ export default function Create() {
         </Stack>
 
         <Space h='xl'/>
-        <Button leftSection={<BrainIcon/>} w={'100%'}>Создать ассистента</Button>
+        <Button leftSection={<BrainIcon/>} w={'100%'} onClick={submit}>Создать ассистента</Button>
         <Space h='100px'/>
       </Container>
     </MantineProvider>

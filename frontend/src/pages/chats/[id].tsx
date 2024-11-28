@@ -2,8 +2,9 @@ import {ActionIcon, Avatar, Box, Card, Container, Group, Input, Stack, Text} fro
 import {useEffect, useRef, useState} from "react";
 import {SendIcon} from "lucide-react";
 import {useParams} from "react-router";
-import {assistants} from "../../assistants.ts";
+import {Assistant, mockAssistants} from "../../assistants.ts";
 import {useTheme} from "../../main.tsx";
+import {useFetch} from "../../shared/api.ts";
 
 const defaultMessages = [
   { role: 'user', text: 'Привет, как дела?' },
@@ -18,14 +19,15 @@ interface Message {
 }
 
 export default function Chats() {
+  const assistants = mockAssistants
   const {id} = useParams()
-  const {name, description, main_color, theme} = assistants[+id!]
   const {setTheme} = useTheme();
 
-  const [messages, setMessages] = useState<Message[]>([...defaultMessages, {role: 'bot', text: 'Я бот ' + name}]);
+  const [messages, setMessages] = useState<Message[]>([...defaultMessages]);
+
   useEffect(() => {
-    setMessages([...defaultMessages.slice(0, -1), {role: 'bot', text: 'Я бот ' + name}]);
-    setTheme({main_color, theme})
+    setMessages([...defaultMessages.slice(0, -1), {role: 'bot', text: 'Я бот ' + assistants[+id!].name}]);
+    setTheme({main_color:assistants[+id!].main_color, theme:assistants[+id!].theme})
   }, []);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -62,8 +64,8 @@ export default function Chats() {
           <Stack>
             <Box w='100%'/>
             <Stack>
-              <Avatar size='xl' name={name} color='custom'/>
-              <Text size='xl'>{description}</Text>
+              <Avatar size='xl' name={assistants?.[+id!].name} color='custom'/>
+              <Text size='xl'>{assistants?.[+id!].description}</Text>
             </Stack>
             {messages.map((message, index) => (
               <Card key={index} style={{ alignSelf: message.role === 'user' ? 'flex-end' : 'flex-start' }}>

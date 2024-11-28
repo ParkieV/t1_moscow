@@ -3,6 +3,7 @@ import {useForm} from '@mantine/form';
 import {upperFirst, useToggle} from '@mantine/hooks';
 import {useCurrentUser} from "../zustand/user.ts";
 import {Navigate} from "react-router";
+import {useEffect} from "react";
 
 export function AuthenticationForm(props: PaperProps) {
   const [type] = useToggle(['login', 'register']);
@@ -15,49 +16,35 @@ export function AuthenticationForm(props: PaperProps) {
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
     },
   });
 
-  const {user, setUser} = useCurrentUser();
+  const {user, login} = useCurrentUser();
+  useEffect(() => {
+  }, []);
+  console.log(user)
   if (user) return <Navigate to='/'/>
   return (
     <Paper radius="md" p="xl" withBorder {...props}>
       <Text size="lg" fw={500}>
         Welcome to Window of knowledge, {type} with
       </Text>
-
-      {/*<Group grow mb="md" mt="md">*/}
-      {/*  <TwitterButton radius="xl">Keycloak</TwitterButton>*/}
-      {/*  <TwitterButton radius="xl">Other SSO</TwitterButton>*/}
-      {/*</Group>*/}
-
-      {/*<Divider label="Or continue with email" labelPosition="center" my="lg" />*/}
-
-      <form onSubmit={form.onSubmit(({username, email}) => {
-        setUser({username, email})
+      <form onSubmit={form.onSubmit(({username, password}) => {
+        console.log('log')
+        login({username, password})
       })}>
         <Stack>
-          {type === 'register' && (
+
             <TextInput
-              label="Name"
+              label="Username"
               placeholder="Your name"
               value={form.values.username}
               onChange={(event) => form.setFieldValue('username', event.currentTarget.value)}
               radius="md"
             />
-          )}
 
-          <TextInput
-            required
-            label="Email"
-            placeholder="hello@mantine.dev"
-            value={form.values.email}
-            onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-            error={form.errors.email && 'Invalid email'}
-            radius="md"
-          />
+
 
           <PasswordInput
             required

@@ -1,13 +1,13 @@
 import {MantineColorScheme} from '@mantine/core';
 
-interface Assistant {
+export interface Assistant {
   name: string;
   description: string;
   main_color: string;
   theme: MantineColorScheme;
 }
 
-export const assistants: Assistant[] = [
+export const mockAssistants: Assistant[] = [
   {
     name: 'Финансист',
     description: 'Ассистент для финансовых консультаций',
