@@ -16,7 +16,7 @@ VALUES ('user', '$2b$12$bhdFcAIzHcEw.QDm0Zj2PODBeq5okVSqW3vBymk6gPRnK1PugSQRO');
 -- Создание таблицы files
 CREATE TABLE files (
     id UUID PRIMARY KEY, -- Основной ключ
-    file_id UUID UNIQUE NOT NULL, -- Уникальный идентификатор файла
+    assistant_id UUID NOT NULL,
     data TEXT NOT NULL,
     chunk_number INTEGER, -- Значение можно вычислить и обновить через триггер или вручную
     tag_1 VARCHAR(255), -- Тег 1
@@ -33,5 +33,17 @@ CREATE TABLE chunks (
     ts_chunk_vector tsvector, -- Векторное представление фрагмента
 
     -- Объявление внешнего ключа
-    CONSTRAINT fk_chunks_files FOREIGN KEY (file_id) REFERENCES files (file_id) ON DELETE CASCADE
+    CONSTRAINT fk_chunks_files FOREIGN KEY (file_id) REFERENCES files (id) ON DELETE CASCADE
+);
+
+CREATE TABLE assistants (
+    id UUID PRIMARY KEY,
+    creator_id UUID NOT NULL,
+    name TEXT NOT NULL,
+    icon BYTEA,
+    main_color TEXT NOT NULL,
+    theme TEXT NOT NULL,
+    website_url TEXT NOT NULL,
+
+    CONSTRAINT fk_assistants_users FOREIGN KEY (creator_id) REFERENCES users (id) ON DELETE CASCADE
 );

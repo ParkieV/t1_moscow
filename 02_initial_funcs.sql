@@ -57,7 +57,7 @@ BEGIN
     INSERT INTO chunks (id, file_id, embed, chunk, ts_chunk_vector)
     SELECT
         gen_random_uuid() AS id,
-        NEW.file_id AS file_id,
+        NEW.id AS file_id,
         NULL AS embed,
         c.chunk,
         to_tsvector('russian', c.chunk) AS ts_chunk_vector

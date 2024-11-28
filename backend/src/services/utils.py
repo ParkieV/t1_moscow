@@ -9,7 +9,7 @@ from src.jwt import AuthHandler
 from src.config import auth_config
 
 
-def check_token(token: str = Depends(AuthHandler.oauth2_scheme)):
+def check_token(token: str = Depends(AuthHandler.oauth2_scheme)) -> str:
     credentials_exception = HTTPException(status_code=401, detail="Could not validate credentials")
     try:
         payload = jwt.decode(token, auth_config.secret_key, algorithms=[auth_config.algorithm])
@@ -18,6 +18,8 @@ def check_token(token: str = Depends(AuthHandler.oauth2_scheme)):
             raise credentials_exception
     except JWTError:
         raise credentials_exception
+
+    return username
 
 async def fetch_url(url: str) -> Any:
     async with aiohttp.ClientSession() as session:

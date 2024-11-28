@@ -1,31 +1,31 @@
 from io import BytesIO
 from typing import Any
+from uuid import UUID
 
 import fitz
 from docx import Document
 
 from fastapi import UploadFile
 
-from src.logger import logger
 from src.repositories.postgres import PostgresContext
 from src.repositories.postgres.data import FileCRUD
 
 
-async def parse_files(files: list[UploadFile]):
+async def parse_files(files: list[UploadFile], assistant_id: UUID):
     db_context = PostgresContext[FileCRUD](crud=FileCRUD(session_factory=PostgresContext.new_session))
     res = []
     for file in files:
         if file.filename.endswith('.pdf'):
             data_info = await _parse_pdf(file)
-            await db_context.crud.insert_file(data_info)
+            await db_context.crud.insert_file(assistant_id, data_info)
             res.append(data_info)
         elif file.filename.endswith('.docx'):
             data_info = await _parse_docx(file)
-            await db_context.crud.insert_file(data_info)
+            await db_context.crud.insert_file(assistant_id, data_info)
             res.append(data_info)
         elif file.filename.endswith('.txt'):
             data_info = await _parse_txt(file)
-            await db_context.crud.insert_file(data_info)
+            await db_context.crud.insert_file(assistant_id, data_info)
             res.append(data_info)
         else:
             raise ValueError('Could not parse file')
