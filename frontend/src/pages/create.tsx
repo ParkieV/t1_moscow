@@ -39,8 +39,8 @@ export default function Create() {
   //   "website_url": "string"
   // }
 
-  const submit = () => {
-    handledFetch('/api/assistants/create', {
+  const submit = async () => {
+    const res = await handledFetch('/api/assistants/create', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('access_token') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyIiwiZXhwIjoxNzMyOTczMDQ1fQ.lLrQUDKhFM-sTeiCMe_-F9zEWQZ_QSfWFg_lAkOV4Xs'}`,
@@ -54,6 +54,11 @@ export default function Create() {
         website_url: "string"
       }),
     });
+    const ass_id = await res.json()
+    const formData = new FormData();
+    files.forEach(file => formData.append('files', file));
+    handledFetch('/api/data/upload_files?assistant_id='+ass_id, {body: formData, method: 'POST'})
+    handledFetch('/api/data/upload_urls?assistant_id='+ass_id, {body: urls.join(','), method: 'POST'})
   }
 
 

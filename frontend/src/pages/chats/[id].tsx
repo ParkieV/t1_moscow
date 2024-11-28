@@ -4,7 +4,7 @@ import {SendIcon} from "lucide-react";
 import {useParams} from "react-router";
 import {Assistant, mockAssistants} from "../../assistants.ts";
 import {useTheme} from "../../main.tsx";
-import {useFetch} from "../../shared/api.ts";
+import {handledFetch, useFetch} from "../../shared/api.ts";
 
 const defaultMessages = [
   { role: 'user', text: 'Привет, как дела?' },
@@ -19,7 +19,14 @@ interface Message {
 }
 
 export default function Chats() {
-  const assistants = mockAssistants
+  const [assistants, setAssistants] = useState(mockAssistants)
+  const a = useFetch('/api/assistants') as Assistant[]
+  useEffect(() => {
+    if (!a || !a.length) return
+    setAssistants(a)
+    setMessages([...defaultMessages.slice(0, -1), {role: 'bot', text: 'Я бот ' + a[+id!].name}]);
+    setTheme({main_color:a[+id!].main_color, theme:a[+id!].theme})
+  }, [a]);
   const {id} = useParams()
   const {setTheme} = useTheme();
 
@@ -28,7 +35,7 @@ export default function Chats() {
   useEffect(() => {
     setMessages([...defaultMessages.slice(0, -1), {role: 'bot', text: 'Я бот ' + assistants[+id!].name}]);
     setTheme({main_color:assistants[+id!].main_color, theme:assistants[+id!].theme})
-  }, []);
+  }, [id]);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -44,10 +51,16 @@ export default function Chats() {
     scrollToBottom();
   }, [messages]);
 
-  const send = () => {
+  const send = async () => {
     if (!input) return
     setMessages(prevMessages => [...prevMessages, { role: 'user', text: input }]);
     setInput(''); // Clear input field
+    const resp = await handledFetch(`/ml_api/assistants/${assistants[+id!].id}/query`, {
+      body: input,
+      method: 'POST'
+    })
+    const message = await resp.json()
+    setMessages(prevMessages => [...prevMessages, { role: 'bot', text: message }])
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

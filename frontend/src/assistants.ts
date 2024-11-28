@@ -5,6 +5,7 @@ export interface Assistant {
   description: string;
   main_color: string;
   theme: MantineColorScheme;
+  id?: string
 }
 
 export const mockAssistants: Assistant[] = [
