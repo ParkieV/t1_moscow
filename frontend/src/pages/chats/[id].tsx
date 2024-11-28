@@ -1,5 +1,5 @@
 import {ActionIcon, Box, Card, Container, Group, Input, Stack} from "@mantine/core";
-import { useEffect, useState, useRef } from "react";
+import {useEffect, useRef, useState} from "react";
 import {SendIcon} from "lucide-react";
 import {useParams} from "react-router";
 
@@ -20,8 +20,8 @@ interface Message {
 }
 
 export default function Chats() {
-  const id = useParams().id
-  
+  const {id} = useParams()
+
   const [messages, setMessages] = useState<Message[]>([...defaultMessages, {role: 'bot', text: 'Hello this chat is for ' + id}]);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -31,9 +31,9 @@ export default function Chats() {
       messagesEndRef.current.scrollIntoView();
     }
   };
-  
 
-  // useEffect to scroll to bottom whenever messages change  
+
+  // useEffect to scroll to bottom whenever messages change
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -41,18 +41,18 @@ export default function Chats() {
   const send = () => {
     if (!input) return
     setMessages(prevMessages => [...prevMessages, { role: 'user', text: input }]);
-    setInput(''); // Clear input field  
+    setInput(''); // Clear input field
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && input.trim()) {
-      event.preventDefault(); // Prevent default input action if necessary  
+      event.preventDefault(); // Prevent default input action if necessary
       send()
     }
   };
 
   return (
-    <Stack h='calc(100vh - 100px)' justify='end'>
+      <Stack h='calc(100vh - 100px)' justify='end'>
       <Stack style={{ overflowY: 'auto' }}>
         <Container w='100%'>
           <Stack>
@@ -73,7 +73,7 @@ export default function Chats() {
             flex={1}
             value={input}
             onChange={(event) => setInput(event.target.value)}
-            onKeyDown={handleKeyDown} // Attach event here  
+            onKeyDown={handleKeyDown} // Attach event here
             placeholder='Type a message...'
           />
           <ActionIcon size='lg' onClick={send}><SendIcon/></ActionIcon>
