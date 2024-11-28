@@ -29,6 +29,11 @@ python-docx = "^1.1.2"
 minio = "^7.2.12"
 bitsandbytes = "0.42.0"
 ru-core-news-sm = {url = "https://github.com/explosion/spacy-models/releases/download/ru_core_news_sm-3.6.0/ru_core_news_sm-3.6.0-py3-none-any.whl"}
+numpy = "1.26.4"
+spacy = "^3.6"
+accelerate = "^1.1.1"
+transformers = "^4.46.3"
+sentence-transformers = "^3.3.1"
 
 
 [build-system]

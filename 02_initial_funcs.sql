@@ -53,16 +53,6 @@ BEGIN
     SET chunk_number = num_chunks
     WHERE id = NEW.id;
 
-    -- Разбиваем текст на чанки и вставляем их в таблицу chunks
-    INSERT INTO chunks (id, file_id, embed, chunk, ts_chunk_vector)
-    SELECT
-        gen_random_uuid() AS id,
-        NEW.id AS file_id,
-        NULL AS embed,
-        c.chunk,
-        to_tsvector('russian', c.chunk) AS ts_chunk_vector
-    FROM split_text_into_chunks(NEW.data, chunk_size) AS c(chunk_number, chunk); -- Явное указание алиасов
-
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;

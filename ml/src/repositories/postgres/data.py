@@ -14,7 +14,7 @@ class FileCRUD(BasePostgresCRUD):
 
     async def insert_file(self, file: list[dict[str, Any]]) -> None:
         file = File(data=' '.join([page_info["text"] for page_info in file]),
-                    file_id=uuid4())
+                    creator_id=uuid4())
         async with self.session_factory() as session:
             try:
                 logger.debug(f'session: {session}, {file}')

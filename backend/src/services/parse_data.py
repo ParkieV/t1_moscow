@@ -9,6 +9,7 @@ from docx import Document
 
 from fastapi import UploadFile
 
+from src.logger import logger
 from src.repositories.postgres import PostgresContext
 from src.repositories.postgres.data import FileCRUD
 
@@ -57,8 +58,14 @@ async def parse_files(files: list[UploadFile],
             await db_context.crud.insert_file(assistant_id, data_info)
             res.append(data_info)
 
-
-    return res
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(f"http://ml:8010/assistants/{assistant_id}/load_embeddings", json=res) as response:
+                if response.status != 200:
+                    raise ConnectionError
+    except Exception as e:
+        logger.error(f"Failed to create embeddings. {e.__class__.__name__}: {e}")
+        raise ConnectionError("Can't save embeddings")
 
 
 async def _parse_pdf(file: UploadFile) -> list[dict[str, Any]]:
@@ -68,13 +75,11 @@ async def _parse_pdf(file: UploadFile) -> list[dict[str, Any]]:
         text = page.get_text().replace('\n', ' ').strip()
 
         file_info.append({
-            'metadata': {
-                "page_number": number_of_page + 1,
-                "page_char_counts": len(text),  # количество символов
-                "page_word_counts": len(text.split(" ")),  # количество слов
-                "page_sents_counts": len(text.split(". ")),  # количество предложений
-                "page_token_counts(approximately)": len(text) / 4,  # количество токенов
-            },
+            "page_number": number_of_page + 1,
+            "page_char_counts": len(text),  # количество символов
+            "page_word_counts": len(text.split(" ")),  # количество слов
+            "page_sents_counts": len(text.split(". ")),  # количество предложений
+            "page_token_counts(approximately)": len(text) / 4,  # количество токенов
             "text": text  # текст
         })
     return file_info
@@ -121,12 +126,11 @@ async def _parse_url(page_text: str | None):
     if page_text is not None:
         text = page_text.replace('\n', ' ').strip()
         file_info = {
-            'metadata': {
-                "char_counts": len(text),  # количество символов
-                "word_counts": len(text.split(" ")),  # количество слов
-                "sents_counts": len(text.split(". ")),  # количество предложений
-                "token_counts(approximately)": len(text) / 4,  # количество токенов
-            },
+            "page_number": 1,
+            "page_char_counts": len(text),  # количество символов
+            "page_word_counts": len(text.split(" ")),  # количество слов
+            "page_sents_counts": len(text.split(". ")),  # количество предложений
+            "page_token_counts(approximately)": len(text) / 4,  # количество токенов
             "text": text  # текст
         }
         return [file_info]

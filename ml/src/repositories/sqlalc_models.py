@@ -17,7 +17,7 @@ class User(Base):
 
 class File(Base):
     __tablename__ = "files"
-    file_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), unique=True, index=True, nullable=False)
+    creator_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), index=True, nullable=False)
     data: Mapped[str] = mapped_column(PG_TEXT(), nullable=False)
     chunk_number: Mapped[int] = mapped_column()
     tag_1: Mapped[str] = mapped_column(nullable=True)
@@ -26,3 +26,8 @@ class File(Base):
 
 class Chunk(Base):
     __tablename__ = "chunks"
+
+    file_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), index=True, nullable=False)
+    embed: Mapped[str] = mapped_column(nullable=True)
+    chunk_number: Mapped[int] = mapped_column(PG_TEXT(), nullable=False)
+    ts_chunk_vector: Mapped[str] = mapped_column(nullable=True)
